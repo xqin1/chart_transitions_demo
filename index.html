@@ -1,0 +1,64 @@
+<!doctype html>
+<!--[if lt IE 7]> <html class="no-js ie6 oldie" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js ie7 oldie" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js ie8 oldie" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+  <title>Demo: How to Animate Transition Between Multiple Charts</title>
+  <meta name="description" content="Demo for How to Animate Transition Between Multiple Charts tutorial">
+  <meta name="author" content="Jim Vallandingham">
+
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+  <link rel="stylesheet" href="css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/style.css">
+
+  <script src="js/libs/modernizr-2.0.6.min.js"></script>
+</head>
+
+<body>
+
+  <div id="container" class="container">
+    <header>
+    <h1>Hurricane Sandy's Impact on NYC 311 Calls</h1>
+    <p>Some of the most frequent 311 complaint types are shown for the days before and after Sandy hit New York City, showing the dramatic shift in how this service was used during the disaster.</p><p>A demonstration of transitioning between multiple chart types.</p>
+    </header>
+    <div id="main" role="main">
+      <div class="btn-group" data-toggle="buttons-radio">
+        <button type="button" id="stream" class="btn active switch">Streamgraph</button>
+        <button type="button" id="stack" class="btn switch">Stacked Area</button>
+        <button type="button" id="area" class="btn switch">Area</button>
+      </div>
+      <div id="vis"></div>
+    </div>
+    <footer>
+    <p>Data from <a href="https://nycopendata.socrata.com/Social-Services/311-Service-Requests-from-2010-to-Present/erm2-nwe9">NYC OpenData</a>. More information about these complaint categories can be found on the <a href="http://www.nyc.gov/apps/311/allServices.htm?requestType=Navigation">NYC 311 site</a>.</p>
+    </footer>
+  </div> <!--! end of #container -->
+  <div id="legend"></div>
+
+  <script src="js/libs/jquery-1.7.2.min.js"></script>
+  <script defer src="js/plugins.js"></script>
+  <script src="js/libs/coffee-script.js"></script>
+  <script src="js/libs/bootstrap.min.js"></script>
+  <script src="js/libs/d3.v3.js"></script>
+  <script type="text/coffeescript" src="coffee/vis.coffee"></script>
+
+  <script> // Change UA-XXXXX-X to be your site's ID
+    window._gaq = [['_setAccount','UA-26518241-3'],['_trackPageview'],['_trackPageLoadTime']];
+    Modernizr.load({
+      load: ('https:' == location.protocol ? '//ssl' : '//www') + '.google-analytics.com/ga.js'
+    });
+  </script>
+
+
+  <!--[if lt IE 7 ]>
+    <script src="//ajax.googleapis.com/ajax/libs/chrome-frame/1.0.3/CFInstall.min.js"></script>
+    <script>window.attachEvent('onload',function(){CFInstall.check({mode:'overlay'})})</script>
+  <![endif]-->
+  
+</body>
+</html>

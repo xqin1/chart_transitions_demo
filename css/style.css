@@ -1,0 +1,55 @@
+body {
+  font-family: "Helvetica Neue";
+}
+
+#main {
+  padding-bottom: 20px;
+}
+
+#vis {
+  padding-top: 15px;
+}
+
+svg {
+  display: block;
+  margin: auto;
+}
+
+.line {
+  fill: none;
+  stroke: #000;
+  stroke-width: 2px;
+}
+
+.axis {
+  shape-rendering: crispEdges;
+}
+
+.axis text {
+  font: 10px sans-serif;
+}
+
+.x.axis line {
+  stroke: #ddd;
+  stroke-opacity: 0.6;
+}
+
+.x.axis path {
+  display: none;
+}
+
+footer p {
+  text-align: center;
+}
+
+#legend {
+  position: fixed;
+  top: 100px;
+  right: 0px;
+  width: 200px;
+  height: 280px;
+  z-index: 100000;
+  overflow: visible;
+}
+
+
