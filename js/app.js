@@ -1,6 +1,6 @@
 // to all the transition functions 
-var paddingBottom = 20;
-var width = 880,
+var paddingBottom = 20,
+    width = 880,
     height = 600 - paddingBottom,
     duration = 750;
 
@@ -50,22 +50,19 @@ var data = null;
 // Create the blank SVG the visualization will live in.
 var svg = d3.select("#vis").append("svg")
           .attr("width", width)
-          .attr("height", height + paddingBottom)
+          .attr("height", height + paddingBottom);
 
-// // ---
-// // Called when the chart buttons are clicked.
-// // Hands off the transitioning to a new chart
-// // to separate functions, based on which button
-// // was clicked. 
-// // ---
-// transitionTo = (name) ->
-//   if name == "stream"
-//     streamgraph()
-//   if name == "stack"
-//     stackedAreas()
-//   if name == "area"
-//     areas()
-
+// ---
+// Called when the chart buttons are clicked.
+// Hands off the transitioning to a new chart
+// to separate functions, based on which button
+// was clicked. 
+// ---
+function transitionTo(name){
+  if (name == "stream"){streamgraph()};
+  if (name == "stack"){stackedAreas()};
+  if (name == "area"){areas()};
+}
 // ---
 // This is our initial setup function.
 // Here we setup our scales and create the
@@ -88,7 +85,7 @@ function start(){
   var index = 0;
   dates = dates.filter(function(d){
                            index += 1;
-                          (index % 2) == 0;});
+                          return (index % 2) == 0;});
 
   xAxis.tickValues(dates)
 
@@ -132,154 +129,154 @@ function start(){
   createLegend()
 
   // default to streamgraph display
- // streamgraph()
+  streamgraph()
 }
-// // ---
-// // Code to transition to streamgraph.
-// //
-// // For each of these chart transition functions, 
-// // we first reset any shared scales and layouts,
-// // then recompute any variables that might get
-// // modified in other charts. Finally, we create
-// // the transition that switches the visualization
-// // to the new display.
-// // ---
-// streamgraph = () ->
-//   // 'wiggle' is the offset to use 
-//   // for streamgraphs.
-//   stack.offset("wiggle")
+// ---
+// Code to transition to streamgraph.
+//
+// For each of these chart transition functions, 
+// we first reset any shared scales and layouts,
+// then recompute any variables that might get
+// modified in other charts. Finally, we create
+// the transition that switches the visualization
+// to the new display.
+// ---
+function streamgraph(){
+  // 'wiggle' is the offset to use 
+  // for streamgraphs.
+  stack.offset("wiggle");
 
-//   // the stack layout will set the count0 attribute
-//   // of our data
-//   stack(data)
+  // the stack layout will set the count0 attribute
+  // of our data
+  stack(data);
 
-//   // reset our y domain and range so that it 
-//   // accommodates the highest value + offset
-//   y.domain([0, d3.max(data[0].values.map((d) -> d.count0 + d.count))])
-//     .range([height, 0])
+  // reset our y domain and range so that it 
+  // accommodates the highest value + offset
+  y.domain([0, d3.max(data[0].values.map(function(d){return d.count0 + d.count}))])
+    .range([height, 0])
 
-//   // the line will be placed along the 
-//   // baseline of the streams, but will
-//   // be faded away by the transition below.
-//   // this positioning is just for smooth transitioning
-//   // from the area chart
-//   line.y((d) -> y(d.count0))
+  // the line will be placed along the 
+  // baseline of the streams, but will
+  // be faded away by the transition below.
+  // this positioning is just for smooth transitioning
+  // from the area chart
+  line.y(function(d){return y(d.count0)})
 
-//   // setup the area generator to utilize
-//   // the count0 values created from the stack
-//   // layout
-//   area.y0((d) -> y(d.count0))
-//     .y1((d) -> y(d.count0 + d.count))
+  // setup the area generator to utilize
+  // the count0 values created from the stack
+  // layout
+  area.y0(function(d){return y(d.count0)})
+    .y1(function(d){return y(d.count0 + d.count)})
 
-//   // here we create the transition
-//   // and modify the area and line for
-//   // each request group through postselection
-//   t = svg.selectAll(".request")
-//     .transition()
-//     .duration(duration)
+  // here we create the transition
+  // and modify the area and line for
+  // each request group through postselection
+  t = svg.selectAll(".request")
+    .transition()
+    .duration(duration)
  
-//   // D3 will take care of the details of transitioning
-//   // between the current state of the elements and
-//   // this new line path and opacity.
-//   t.select("path.area")
-//     .style("fill-opacity", 1.0)
-//     .attr("d", (d) -> area(d.values))
+  // D3 will take care of the details of transitioning
+  // between the current state of the elements and
+  // this new line path and opacity.
+  t.select("path.area")
+    .style("fill-opacity", 1.0)
+    .attr("d", function(d){return area(d.values)})
 
-//   // 1e-6 is the smallest number in JS that
-//   // won't get converted to scientific notation. 
-//   // as scientific notation is not supported by CSS,
-//   // we need to use this as the low value so that the 
-//   // line doesn't reappear due to an invalid number.
-//   t.select("path.line")
-//     .style("stroke-opacity", 1e-6)
-//     .attr("d", (d) -> line(d.values))
+  // 1e-6 is the smallest number in JS that
+  // won't get converted to scientific notation. 
+  // as scientific notation is not supported by CSS,
+  // we need to use this as the low value so that the 
+  // line doesn't reappear due to an invalid number.
+  t.select("path.line")
+    .style("stroke-opacity", 1e-6)
+    .attr("d", function(d){return line(d.values)})
+}
+// ---
+// Code to transition to Stacked Area chart.
+//
+// Again, like in the streamgraph function,
+// we use the stack layout to manage
+// the layout details.
+// ---
+function stackedAreas(){
+  // the offset is the only thing we need to 
+  // change on our stack layout to have a completely
+  // different type of chart!
+  stack.offset("zero")
+  // re-run the layout on the data to modify the count0
+  // values
+  stack(data)
 
-// // ---
-// // Code to transition to Stacked Area chart.
-// //
-// // Again, like in the streamgraph function,
-// // we use the stack layout to manage
-// // the layout details.
-// // ---
-// stackedAreas = () ->
-//   // the offset is the only thing we need to 
-//   // change on our stack layout to have a completely
-//   // different type of chart!
-//   stack.offset("zero")
-//   // re-run the layout on the data to modify the count0
-//   // values
-//   stack(data)
+  // the rest of this is the same as the streamgraph - but
+  // because the count0 values are now set for stacking, 
+  // we will get a Stacked Area chart.
+  y.domain([0, d3.max(data[0].values.map(function(d){return d.count0 + d.count}))])
+    .range([height, 0])
 
-//   // the rest of this is the same as the streamgraph - but
-//   // because the count0 values are now set for stacking, 
-//   // we will get a Stacked Area chart.
-//   y.domain([0, d3.max(data[0].values.map((d) -> d.count0 + d.count))])
-//     .range([height, 0])
+  line.y(function(d){return y(d.count0)})
 
-//   line.y((d) -> y(d.count0))
+  area.y0(function(d){return y(d.count0)})
+    .y1(function(d){return y(d.count0 + d.count)})
 
-//   area.y0((d) -> y(d.count0))
-//     .y1((d) -> y(d.count0 + d.count))
+  t = svg.selectAll(".request")
+    .transition()
+    .duration(duration)
 
-//   t = svg.selectAll(".request")
-//     .transition()
-//     .duration(duration)
+  t.select("path.area")
+    .style("fill-opacity", 1.0)
+    .attr("d", function(d){return area(d.values)})
 
-//   t.select("path.area")
-//     .style("fill-opacity", 1.0)
-//     .attr("d", (d) -> area(d.values))
+  t.select("path.line")
+    .style("stroke-opacity", 1e-6)
+    .attr("d", function(d){return line(d.values)})
+}
+// ---
+// Code to transition to Area chart.
+// ---
+function areas(){
+  g = svg.selectAll(".request")
 
-//   t.select("path.line")
-//     .style("stroke-opacity", 1e-6)
-//     .attr("d", (d) -> line(d.values))
-
-// // ---
-// // Code to transition to Area chart.
-// // ---
-// areas = () ->
-//   g = svg.selectAll(".request")
-
-//   // set the starting position of the border
-//   // line to be on the top part of the areas.
-//   // then it is immediately hidden so that it
-//   // can fade in during the transition below
-//   line.y((d) -> y(d.count0 + d.count))
-//   g.select("path.line")
-//     .attr("d", (d) -> line(d.values))
-//     .style("stroke-opacity", 1e-6)
+  // set the starting position of the border
+  // line to be on the top part of the areas.
+  // then it is immediately hidden so that it
+  // can fade in during the transition below
+  line.y(function(d){return y(d.count0 + d.count)})
+  g.select("path.line")
+    .attr("d", function(d){return line(d.values)})
+    .style("stroke-opacity", 1e-6)
 
  
-//   // as there is no stacking in this chart, the maximum
-//   // value of the input domain is simply the maximum count value,
-//   // which we precomputed in the display function 
-//   y.domain([0, d3.max(data.map((d) -> d.maxCount))])
-//     .range([height, 0])
+  // as there is no stacking in this chart, the maximum
+  // value of the input domain is simply the maximum count value,
+  // which we precomputed in the display function 
+  y.domain([0, d3.max(data.map(function(d){return d.maxCount}))])
+    .range([height, 0])
 
-//   // the baseline of this chart will always
-//   // be at the bottom of the display, so we
-//   // can set y0 to a constant.
-//   area.y0(height)
-//     .y1((d) -> y(d.count))
+  // the baseline of this chart will always
+  // be at the bottom of the display, so we
+  // can set y0 to a constant.
+  area.y0(height)
+    .y1(function(d){return y(d.count)})
 
-//   line.y((d) -> y(d.count))
+  line.y(function(d){return y(d.count)})
 
-//   t = g.transition()
-//     .duration(duration)
+  t = g.transition()
+    .duration(duration)
 
-//   // transition the areas to be 
-//   // partially transparent so that the
-//   // overlap is better understood.
-//   t.select("path.area")
-//     .style("fill-opacity", 0.5)
-//     .attr("d", (d) -> area(d.values))
+  // transition the areas to be 
+  // partially transparent so that the
+  // overlap is better understood.
+  t.select("path.area")
+    .style("fill-opacity", 0.5)
+    .attr("d", function(d){return area(d.values)})
 
-//   // here we finally show the line 
-//   // that serves as a nice border at the
-//   // top of our areas
-//   t.select("path.line")
-//     .style("stroke-opacity", 1)
-//     .attr("d", (d) -> line(d.values))
-
+  // here we finally show the line 
+  // that serves as a nice border at the
+  // top of our areas
+  t.select("path.line")
+    .style("stroke-opacity", 1)
+    .attr("d", function(d){return line(d.values)})
+}
 // ---
 // Called on legend mouse over. Shows the legend
 // ---
@@ -371,7 +368,7 @@ function display(error, rawData){
 
   data.sort(function(a,b){return b.maxCount - a.maxCount});
 
-  start()
+  start();
 }
 
 // Document is ready, lets go!
