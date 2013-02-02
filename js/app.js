@@ -71,7 +71,7 @@ function transitionTo(name){
 function start(){
   // first, lets setup our x scale domain
   // this assumes that the dates in our data are in order
-  var minDate = d3.min(data, function(d){return d.values[0].date})
+  var minDate = d3.min(data, function(d){return d.values[0].date});
   var maxDate = d3.max(data, function(d){return d.values[d.values.length - 1].date});
   x.domain([minDate, maxDate])
 
@@ -87,7 +87,7 @@ function start(){
                            index += 1;
                           return (index % 2) == 0;});
 
-  xAxis.tickValues(dates)
+  xAxis.tickValues(dates);
 
   // the axis lines will go behind
   // the rest of the display, so create
@@ -102,16 +102,16 @@ function start(){
   // we can set the area's y0 and y1 values to 
   // constants to achieve this effect.
   area.y0(height / 2)
-    .y1(height / 2)
+    .y1(height / 2);
 
   // now we bind our data to create
   // a new group for each request type
   g = svg.selectAll(".request")
     .data(data)
-    .enter()
+    .enter();
 
   requests = g.append("g")
-    .attr("class", "request")
+    .attr("class", "request");
 
   // add some paths that will
   // be used to display the lines and
@@ -119,17 +119,17 @@ function start(){
   requests.append("path")
     .attr("class", "area")
     .style("fill", function(d){return color(d.key)})
-    .attr("d", function(d){return area(d.values)})
+    .attr("d", function(d){return area(d.values)});
 
   requests.append("path")
     .attr("class", "line")
-    .style("stroke-opacity", 1e-6)
+    .style("stroke-opacity", 1e-6);
 
   // create the legend on the side of the page
-  createLegend()
+  createLegend();
 
   // default to streamgraph display
-  streamgraph()
+  streamgraph();
 }
 // ---
 // Code to transition to streamgraph.
@@ -153,27 +153,27 @@ function streamgraph(){
   // reset our y domain and range so that it 
   // accommodates the highest value + offset
   y.domain([0, d3.max(data[0].values.map(function(d){return d.count0 + d.count}))])
-    .range([height, 0])
+    .range([height, 0]);
 
   // the line will be placed along the 
   // baseline of the streams, but will
   // be faded away by the transition below.
   // this positioning is just for smooth transitioning
   // from the area chart
-  line.y(function(d){return y(d.count0)})
+  line.y(function(d){return y(d.count0)});
 
   // setup the area generator to utilize
   // the count0 values created from the stack
   // layout
   area.y0(function(d){return y(d.count0)})
-    .y1(function(d){return y(d.count0 + d.count)})
+    .y1(function(d){return y(d.count0 + d.count)});
 
   // here we create the transition
   // and modify the area and line for
   // each request group through postselection
-  t = svg.selectAll(".request")
+  var t = svg.selectAll(".request")
     .transition()
-    .duration(duration)
+    .duration(duration);
  
   // D3 will take care of the details of transitioning
   // between the current state of the elements and
@@ -202,39 +202,39 @@ function stackedAreas(){
   // the offset is the only thing we need to 
   // change on our stack layout to have a completely
   // different type of chart!
-  stack.offset("zero")
+  stack.offset("zero");
   // re-run the layout on the data to modify the count0
   // values
-  stack(data)
+  stack(data);
 
   // the rest of this is the same as the streamgraph - but
   // because the count0 values are now set for stacking, 
   // we will get a Stacked Area chart.
   y.domain([0, d3.max(data[0].values.map(function(d){return d.count0 + d.count}))])
-    .range([height, 0])
+    .range([height, 0]);
 
-  line.y(function(d){return y(d.count0)})
+  line.y(function(d){return y(d.count0)});
 
   area.y0(function(d){return y(d.count0)})
-    .y1(function(d){return y(d.count0 + d.count)})
+    .y1(function(d){return y(d.count0 + d.count)});
 
-  t = svg.selectAll(".request")
+  var t = svg.selectAll(".request")
     .transition()
-    .duration(duration)
+    .duration(duration);
 
   t.select("path.area")
     .style("fill-opacity", 1.0)
-    .attr("d", function(d){return area(d.values)})
+    .attr("d", function(d){return area(d.values)});
 
   t.select("path.line")
     .style("stroke-opacity", 1e-6)
-    .attr("d", function(d){return line(d.values)})
+    .attr("d", function(d){return line(d.values)});
 }
 // ---
 // Code to transition to Area chart.
 // ---
 function areas(){
-  g = svg.selectAll(".request")
+  var g = svg.selectAll(".request");
 
   // set the starting position of the border
   // line to be on the top part of the areas.
@@ -260,7 +260,7 @@ function areas(){
 
   line.y(function(d){return y(d.count)})
 
-  t = g.transition()
+  var t = g.transition()
     .duration(duration)
 
   // transition the areas to be 
